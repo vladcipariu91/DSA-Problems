@@ -35,7 +35,7 @@ def find_files(suffix, path):
             if os.path.isfile(file):
                 if file.endswith(suffix):
                     c_files.append(file)
-            elif os.path.isdir(file):
+            else:
                 q.appendleft(file)
 
     return c_files
