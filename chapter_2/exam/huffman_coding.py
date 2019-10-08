@@ -63,6 +63,24 @@ class PriorityQueue:
         return str(self.min_heap)
 
 
+class HuffmanTree:
+
+    def __init__(self):
+        pass
+
+
+class Node:
+
+    def __init__(self, value, weight):
+        self.left = None
+        self.right = None
+        self.value = value
+        self.weight = weight
+
+    def is_leaf(self):
+        return self.left is None and self.right is None
+
+
 q = PriorityQueue()
 q.append(3)
 q.append(1)
