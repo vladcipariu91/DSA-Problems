@@ -23,13 +23,16 @@ from collections import deque
 
 def find_files(suffix, path):
     q = deque()
-    q.appendleft(path)
+    q.append(path)
     c_files = []
 
     while q:
         path = q.pop()
-        print(path)
-        content = os.listdir(path)
+        try:
+            content = os.listdir(path)
+        except FileNotFoundError:
+            return c_files
+
         for f in content:
             file = os.path.join(path, f)
             if os.path.isfile(file):
@@ -42,3 +45,8 @@ def find_files(suffix, path):
 
 
 print(find_files('.c', './chapter_2/exam/testdir'))
+# expected ['./chapter_2/exam/testdir/t1.c', './chapter_2/exam/testdir/subdir5/a.c', './chapter_2/exam/testdir/subdir1/a.c', './chapter_2/exam/testdir/subdir3/subsubdir1/b.c']
+print(find_files('.py', './chapter_2/exam/testdir'))
+# expected []
+print(find_files('.py', './chapter_2/exam/testdir_not_found'))
+# expected []
