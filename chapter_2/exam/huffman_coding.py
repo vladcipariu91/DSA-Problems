@@ -99,6 +99,7 @@ class HuffmanTree:
 
     def __init__(self, text):
         self.__p_q = PriorityQueue()
+        self.codes_map = {}
         occurrence_map = {}
         for c in text:
             if c in occurrence_map:
@@ -110,6 +111,7 @@ class HuffmanTree:
             self.__p_q.append((k, v))
 
         self.root = self.__build()
+        self.__generate_codes(self.root, [], 0)
 
     def __build(self):
         root = None
@@ -138,6 +140,36 @@ class HuffmanTree:
                 root = parent
 
         return root
+
+    def get_code(self, value):
+        if value in self.codes_map:
+            return self.codes_map[value]
+        else:
+            return None
+
+    def __generate_codes(self, node, arr, index):
+        if node.left:
+            if len(arr) == index:
+                arr.append("0")
+            else:
+                arr[index] = "0"
+            self.__generate_codes(node.left, arr, index + 1)
+
+        if node.right:
+            if len(arr) == index:
+                arr.append("1")
+            else:
+                arr[index] = "1"
+            self.__generate_codes(node.right, arr, index + 1)
+
+        if node.is_leaf():
+            code = ""
+            for it in arr:
+                if it == "":
+                    break
+                code += it
+
+            self.codes_map[node.value] = code
 
     def __repr__(self):
         q = Queue()
@@ -223,5 +255,37 @@ class Node:
 #
 # print(q)
 
-tree = HuffmanTree("this is a test")
-print(tree)
+tree = None
+
+
+def huffman_encoding(data):
+    global tree
+    tree = HuffmanTree(data)
+
+    code = ""
+    for it in data:
+        part_code = tree.get_code(it)
+        if part_code:
+            code += part_code
+
+    return code
+
+
+def huffman_decoding(data, tree):
+    current = tree.root
+    result = ""
+    for it in data:
+        if it == "0":
+            current = current.left
+        else:
+            current = current.right
+
+        if current.is_leaf():
+            result += current.value
+            current = tree.root
+
+    return result
+
+
+print(huffman_encoding("this is a test"))
+print(huffman_decoding("01111101100010110001011101001111110001", tree))
