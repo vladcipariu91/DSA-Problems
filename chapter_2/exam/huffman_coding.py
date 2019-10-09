@@ -1,31 +1,4 @@
 import sys
-from collections import deque
-
-
-class Queue():
-    def __init__(self):
-        self.q = deque()
-
-    def enq(self, value):
-        self.q.appendleft(value)
-
-    def deq(self):
-        if len(self.q) > 0:
-            return self.q.pop()
-        else:
-            return None
-
-    def __len__(self):
-        return len(self.q)
-
-    def __repr__(self):
-        if len(self.q) > 0:
-            s = "<enqueue here>\n_________________\n"
-            s += "\n_________________\n".join([str(item) for item in self.q])
-            s += "\n_________________\n<dequeue here>"
-            return s
-        else:
-            return "<queue is empty>"
 
 
 class PriorityQueue(object):
@@ -99,6 +72,10 @@ class PriorityQueue(object):
 class HuffmanTree:
 
     def __init__(self, text):
+        if text is None or len(text) == 0:
+            self.root = None
+            return
+
         self.__p_q = PriorityQueue()
         self.codes_map = {}
         occurrence_map = {}
@@ -172,63 +149,6 @@ class HuffmanTree:
 
             self.codes_map[node.value] = code
 
-    def __repr__(self):
-        q = Queue()
-        root = self.root
-        q.enq(root)
-
-        res = str(root) + "\n"
-        level_node_count = 2
-        current_count = 0
-        while q:
-            node = q.deq()
-            if node.left:
-                q.enq(node.left)
-                if current_count != 0:
-                    if current_count == level_node_count - 1:
-                        res += " " + str(node.left)
-                    else:
-                        res += " " + str(node.left) + " | "
-                else:
-                    res += str(node.left) + " | "
-            else:
-                if current_count != 0:
-                    if current_count == level_node_count - 1:
-                        res += " <empty>"
-                    else:
-                        res += " <empty> | "
-                else:
-                    res += "<empty> | "
-
-            current_count += 1
-
-            if node.right:
-                q.enq(node.right)
-                if current_count != 0:
-                    if current_count == level_node_count - 1:
-                        res += " " + str(node.right)
-                    else:
-                        res += " " + str(node.right) + " | "
-                else:
-                    res += str(node.right) + " | "
-            else:
-                if current_count != 0:
-                    if current_count == level_node_count - 1:
-                        res += " <empty>"
-                    else:
-                        res += " <empty> | "
-                else:
-                    res += "<empty> | "
-
-            current_count += 1
-
-            if current_count == level_node_count:
-                level_node_count *= 2
-                current_count = 0
-                res += "\n"
-
-        return res
-
 
 class Node:
 
@@ -240,18 +160,16 @@ class Node:
     def is_leaf(self):
         return self.left is None and self.right is None
 
-    def __repr__(self):
-        return f"Node({self.value})"
-
 
 def huffman_encoding(data):
     tree = HuffmanTree(data)
 
     code = ""
-    for it in data:
-        part_code = tree.get_code(it)
-        if part_code:
-            code += part_code
+    if data is not None:
+        for it in data:
+            part_code = tree.get_code(it)
+            if part_code:
+                code += part_code
 
     return code, tree
 
@@ -273,19 +191,89 @@ def huffman_decoding(data, tree):
 
 
 if __name__ == "__main__":
-    codes = {}
+    def simple_test():
+        a_great_sentence = "The bird is the word"
 
-    a_great_sentence = "The bird is the word"
+        print("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
+        print("The content of the data is: {}\n".format(a_great_sentence))
 
-    print("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
-    print("The content of the data is: {}\n".format(a_great_sentence))
+        encoded_data, tree = huffman_encoding(a_great_sentence)
 
-    encoded_data, tree = huffman_encoding(a_great_sentence)
+        print("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
+        # expected 36
+        print("The content of the encoded data is: {}\n".format(encoded_data))
+        # expected 1010111001011010111111100000110111101111100010111001011001100011100000
 
-    print("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
-    print("The content of the encoded data is: {}\n".format(encoded_data))
+        decoded_data = huffman_decoding(encoded_data, tree)
 
-    decoded_data = huffman_decoding(encoded_data, tree)
+        print("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
+        # expected 69
+        print("The content of the encoded data is: {}\n".format(decoded_data))
+        # expected The bird is the word
 
-    print("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
-    print("The content of the encoded data is: {}\n".format(decoded_data))
+
+    def empty_input_test():
+        empty_sentence = ""
+
+        print("The size of the data is: {}\n".format(sys.getsizeof(empty_sentence)))
+        # expected 49
+
+        encoded_data, tree = huffman_encoding(empty_sentence)
+        print("The size of the encoded data is: {}\n".format(
+            0 if len(encoded_data) == 0 or encoded_data is None else sys.getsizeof(int(encoded_data, base=2))))
+        # expected 0
+        print("Encoded: {}".format(encoded_data))
+        # expected ""
+
+        decoded_data = huffman_decoding(encoded_data, tree)
+
+        print("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
+        # expected 49
+        print("Decoded: {}".format(decoded_data))
+        # expected ""
+
+
+    def none_input_test():
+        none_sentence = None
+
+        print("The size of the data is: {}\n".format(sys.getsizeof(none_sentence)))
+
+        encoded_data, tree = huffman_encoding(none_sentence)
+        print("The size of the encoded data is: {}\n".format(
+            0 if len(encoded_data) == 0 or encoded_data is None else sys.getsizeof(int(encoded_data, base=2))))
+        # expected 49
+        print("Encoded: {}".format(encoded_data))
+        # expected ""
+
+        decoded_data = huffman_decoding(encoded_data, tree)
+
+        print("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
+        # expected 49
+        print("Decoded: {}".format(decoded_data))
+        # expected ""
+
+
+    def a_really_long_string():
+        a_sentence = "This a test for a really long string that I just came up now. Aren't I really creative."
+
+        print("The size of the data is: {}\n".format(sys.getsizeof(a_sentence)))
+
+        encoded_data, tree = huffman_encoding(a_sentence)
+        print("The size of the encoded data is: {}\n".format(
+            0 if len(encoded_data) == 0 or encoded_data is None else sys.getsizeof(int(encoded_data, base=2))))
+        # expected 76
+        print("Encoded: {}".format(encoded_data))
+        # expected 111101011010011110010100111110011001011010100001111110110101100101111100111001101101110100010001111111011100001011111101100110111010001001111100111110110011011001101001110000111100101011111111001100010100001101000111001001010110011110001011101111111001011101101001101111111101100110110111110110101000111100101011100110110111010001000111111101101000100110110111000111100110010010110010011
+
+        decoded_data = huffman_decoding(encoded_data, tree)
+
+        print("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
+        # expected 136
+        print("Decoded: {}".format(decoded_data))
+        # expected This a test for a really long string that I just came up now. Aren't I really creative.
+
+
+    simple_test()
+    empty_input_test()
+    none_input_test()
+    a_really_long_string()
