@@ -166,6 +166,10 @@ class LinkedList:
 
 
 def union(llist_1, llist_2):
+    if llist_1 is None:
+        return llist_2
+    if llist_2 is None:
+        return llist_1
     # Your Solution Here
     tree = Tree()
 
@@ -184,6 +188,9 @@ def union(llist_1, llist_2):
 
 
 def intersection(llist_1, llist_2):
+    if llist_1 is None or llist_2 is None:
+        return None
+
     # Your Solution Here
     l1_size = llist_1.size()  # O(n)
     l2_size = llist_2.size()  # O(n)
@@ -222,7 +229,9 @@ linked_list_1 = LinkedList()
 linked_list_2 = LinkedList()
 
 element_1 = [3, 2, 4, 35, 6, 65, 6, 4, 3, 21]
+# expected 1 -> 2 -> 3 -> 4 -> 6 -> 9 -> 11 -> 21 -> 32 -> 35 -> 65 ->
 element_2 = [6, 32, 4, 9, 6, 1, 11, 21, 1]
+# expected 4 -> 6 -> 21 ->
 
 for i in element_1:
     linked_list_1.append(i)
@@ -248,4 +257,19 @@ for i in element_2:
     linked_list_4.append(i)
 
 print(union(linked_list_3, linked_list_4))
+# 1 -> 2 -> 3 -> 4 -> 6 -> 7 -> 8 -> 9 -> 11 -> 21 -> 23 -> 35 -> 65 ->
 print(intersection(linked_list_3, linked_list_4))
+# expected ""
+
+# Test case 3
+linked_list_5 = None
+linked_list_6 = LinkedList()
+
+element_1 = [3, 2, 4, 35, 6, 65, 6, 4, 3, 23]
+for i in element_1:
+    linked_list_6.append(i)
+
+print(union(linked_list_5, linked_list_6))
+# expected 3 -> 2 -> 4 -> 35 -> 6 -> 65 -> 6 -> 4 -> 3 -> 23 ->
+print(intersection(linked_list_3, linked_list_4))
+# expected ""
