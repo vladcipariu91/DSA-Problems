@@ -18,7 +18,7 @@ class Block:
     def calc_hash(self):
         sha = hashlib.sha256()
 
-        hash_str = (self.timestamp + self.data + self.previous_hash if self.previous_hash else "").encode('utf-8')
+        hash_str = (self.timestamp + self.data).encode('utf-8')
 
         sha.update(hash_str)
 
@@ -40,6 +40,10 @@ class Blockchain:
         self.blocks[new_block.hash] = new_block
         self.head = new_block
 
+    def find(self, value, timestamp):
+        search_block = Block(timestamp, value, None)
+        return self.blocks.get(search_block.hash)
+
     def __repr__(self):
         current = self.head
         result = ""
@@ -51,8 +55,22 @@ class Blockchain:
 
 
 blockchain = Blockchain()
+genesis_timestamp = blockchain.head.timestamp
 blockchain.add_block("Test 1")
 blockchain.add_block("Test 2")
 blockchain.add_block("Test 3")
 
-print(blockchain)
+block = blockchain.find("Genesis Block", genesis_timestamp)
+print(block)
+"""
+expected:
+Block: [
+timestamp: 2019-10-09 16:56:03.187107+00:00,
+data: Genesis Block,
+hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,
+prev_hash: None
+]
+"""
+block = blockchain.find("Genesis Block", timestamp_now())
+print(block)
+# expected: None
