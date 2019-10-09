@@ -1,7 +1,7 @@
 ### What is the first thing we should do to solve a problem like this one?
     Make sure we understand the problem
 
-###What does it mean to understand a computational problem?
+### What does it mean to understand a computational problem?
     0. Don't panic!
     1. Understand what the possible inputs are.
         What are the inputs?
