@@ -41,6 +41,9 @@ parent.add_group(child)
 
 
 def is_user_in_group(user, group):
+    if user is None or group is None:
+        return False
+
     if user in group.users:
         return True
 
@@ -51,4 +54,8 @@ def is_user_in_group(user, group):
 
 
 print(is_user_in_group("sub_child_user", parent))
+# expected True
 print(is_user_in_group("sub_child_user", sub_child_1))
+# expected False
+print(is_user_in_group("sub_child_user", None))
+# expected False
