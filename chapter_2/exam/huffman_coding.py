@@ -1,3 +1,4 @@
+import sys
 from collections import deque
 
 
@@ -164,10 +165,10 @@ class HuffmanTree:
 
         if node.is_leaf():
             code = ""
-            for it in arr:
+            for it in range(0, index):
                 if it == "":
                     break
-                code += it
+                code += arr[it]
 
             self.codes_map[node.value] = code
 
@@ -243,23 +244,7 @@ class Node:
         return f"Node({self.value})"
 
 
-# q = PriorityQueue()
-# q.append(3)
-# q.append(1)
-# q.append(2)
-# q.append(3)
-# q.append(1)
-# q.append(1)
-# q.append(3)
-# print(q)
-#
-# print(q)
-
-tree = None
-
-
 def huffman_encoding(data):
-    global tree
     tree = HuffmanTree(data)
 
     code = ""
@@ -268,7 +253,7 @@ def huffman_encoding(data):
         if part_code:
             code += part_code
 
-    return code
+    return code, tree
 
 
 def huffman_decoding(data, tree):
@@ -287,5 +272,20 @@ def huffman_decoding(data, tree):
     return result
 
 
-print(huffman_encoding("this is a test"))
-print(huffman_decoding("01111101100010110001011101001111110001", tree))
+if __name__ == "__main__":
+    codes = {}
+
+    a_great_sentence = "The bird is the word"
+
+    print("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
+    print("The content of the data is: {}\n".format(a_great_sentence))
+
+    encoded_data, tree = huffman_encoding(a_great_sentence)
+
+    print("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
+    print("The content of the encoded data is: {}\n".format(encoded_data))
+
+    decoded_data = huffman_decoding(encoded_data, tree)
+
+    print("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
+    print("The content of the encoded data is: {}\n".format(decoded_data))
