@@ -140,17 +140,17 @@ class Tree():
         if root is None:
             return root
 
-            # If the key to be deleted is smaller than the root's
-        # key then it lies in  left subtree
+        # If the key to be deleted is smaller than the root's
+        # key then it lies in left subtree
         if key < root.key:
             root.left = self.deleteNode(root.left, key)
 
-            # If the kye to be delete is greater than the root's key
+        # If the kye to be delete is greater than the root's key
         # then it lies in right subtree
         elif key > root.key:
             root.right = self.deleteNode(root.right, key)
 
-            # If key is same as root's key, then this is the node
+        # If key is same as root's key, then this is the node
         # to be deleted
         else:
 
@@ -163,7 +163,7 @@ class Tree():
                 temp = root.left
                 return temp
 
-                # Node with two children: Get the inorder successor
+            # Node with two children: Get the inorder successor
             # (smallest in the right subtree)
             temp = self.minValueNode(root.right)
 
