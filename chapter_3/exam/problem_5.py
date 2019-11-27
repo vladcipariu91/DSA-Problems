@@ -82,6 +82,16 @@ for word in wordList:
 
 node = trie.find("fun")
 print(node.suffixes())
+# expected ['ction', 'ctioz']
 
 node = trie.find("tr")
 print(node.suffixes())
+# expected ['ie', 'igger', 'igonometry', 'ipod']
+
+node = trie.find("trz")
+if node:
+    print(node.suffixes())
+else:
+    print(None)
+# expected none
+
